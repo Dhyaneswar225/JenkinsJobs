@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: <%= activeProfile %>
+
+sfly.core:
+  tracer:
+    type: CLOUD
+
+service:
+  tags:
+    Environment: <%= activeProfile %>
+    inactive_retention_days: <%= inactiveRetentionDays %>
+
+management.metrics.export.signalfx:
+    enabled: <%= signalfxMetricsEnabled %>
+    access-token: <% if signalfxMetricsEnabled == true %><%= signalfxToken %><% end %>

@@ -1,0 +1,162 @@
+<!--
+  ~ Copyright (c) Shutterfly.com, Inc. 2019. All Rights Reserved.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.shutterfly.services</groupId>
+        <artifactId>test-service-example-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>test-service-example.performance-tests</artifactId>
+    <name>test-service-example.performance-tests</name>
+    <version>1.0.0</version>
+    <description>
+        Performances tests for test-service-example ECS Springboard service.
+    </description>
+
+    <properties>
+        <gatling.version>3.3.1</gatling.version>
+        <gatling-plugin.version>3.0.5</gatling-plugin.version>
+        <scala-maven-plugin.version>4.3.0</scala-maven-plugin.version>
+
+        <!-- Set defaults. Can override with profiles below. -->
+        <exampleserver.url>ecs-service-archetype-verify.stage.us-east-1.sfly-aws-dev.sfly.int</exampleserver.url>
+        <server.env>stage</server.env>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.gatling.highcharts</groupId>
+            <artifactId>gatling-charts-highcharts</artifactId>
+            <version>${gatling.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.shutterfly.test.load</groupId>
+            <artifactId>framework</artifactId>
+            <version>0.9.2</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+    <profiles>
+        <profile>
+            <id>env-dev</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <exampleserver.url>ecs-service-archetype-verify.dev.us-east-1.sfly-aws-dev.sfly.int</exampleserver.url>
+                <server.env>dev</server.env>
+            </properties>
+        </profile>
+        <profile>
+            <id>env-beta</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <exampleserver.url>ecs-service-archetype-verify.beta.us-east-1.sfly-aws-dev.sfly.int</exampleserver.url>
+                <server.env>beta</server.env>
+            </properties>
+        </profile>
+        <profile>
+            <id>env-dev-apigee</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <exampleserver.url>api2.dev.shutterfly.com/v1/springboard-example</exampleserver.url>
+                <server.env>dev</server.env>
+            </properties>
+        </profile>
+        <profile>
+            <id>env-stage-apigee</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <exampleserver.url>api2.stage.shutterfly.com/v1/springboard-example</exampleserver.url>
+                <server.env>stage</server.env>
+            </properties>
+        </profile>
+
+        <!-- The following profile is for trend charts in tre jenkins -->
+        <profile>
+            <id>publish-stats-and-analyze-trends</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <executions>
+                            <execution>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <executable>publish_stats_and_analyze_trends.sh
+                            </executable>
+                            <workingDirectory>${project.build.directory}</workingDirectory>
+                            <arguments>
+                                <argument>${server.env}</argument>
+                                <argument>${project.build.directory}</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>${scala-maven-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>io.gatling</groupId>
+                <artifactId>gatling-maven-plugin</artifactId>
+                <version>${gatling-plugin.version}</version>
+                <!-- Use goal 'gatling:execute' to run. -->
+                <configuration>
+                    <overrideGatlingJvmArgs>true</overrideGatlingJvmArgs>
+                    <jvmArgs>
+                        <jvmArg>-Dexampleserver.server.hostname=${exampleserver.url}</jvmArg>
+                    </jvmArgs>
+                    <dataFolder>src/test/resources/data</dataFolder>
+                    <resultsFolder>target/gatling</resultsFolder>
+                    <useOldJenkinsJUnitSupport>true</useOldJenkinsJUnitSupport>
+                    <failOnError>false</failOnError>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

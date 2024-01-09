@@ -1,0 +1,13 @@
+signalfxMetricsEnabled: false
+
+inactiveRetentionDays: 7
+
+# Deploy Script Values
+minMemoryMB: 1000
+maxMemoryMB: 1000
+
+# TODO You will need to add this to the envs yaml file that you want APM enabled and it set to true.
+signalfxApmEnabled: false
+
+# TODO You will need to add this to the envs you want it enable with their mode monitor,protected.
+prevotyMode: disabled

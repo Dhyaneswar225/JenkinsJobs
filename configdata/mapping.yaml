@@ -1,0 +1,4 @@
+# this file defines what output files that the configTemplate script should generate.
+# See https://wiki.corp.shutterfly.com/display/sfly/Configuration+with+ERB+Templates for more details.
+templates/application.yaml.erb: ../config/application.yaml
+templates/deployConfig/test-service-example.erb: ../conf/test-service-example

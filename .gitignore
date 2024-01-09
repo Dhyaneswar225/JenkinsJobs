@@ -1,0 +1,28 @@
+target/
+
+# IntelliJ
+\.idea/
+*\.iml
+
+# Eclipse
+.classpath
+.project
+.settings
+.cache-main
+.cache-tests
+.factorypath
+
+# OSX Stuff
+.DS_Store
+
+# JVM crash logs
+hs_err_pid*
+
+# generated config files
+/config/
+/conf/
+/bin/
+
+# other stuff
+*.swp
+.repository

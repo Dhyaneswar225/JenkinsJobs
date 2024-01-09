@@ -1,0 +1,2 @@
+test-service-example-config:
+  image: artifact.stage.shutterfly.com/shutterfly/test-service-example-config-int:$config_tag

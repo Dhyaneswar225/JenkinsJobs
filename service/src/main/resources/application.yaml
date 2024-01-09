@@ -1,0 +1,52 @@
+#
+# Global/Default configuration (possibly overridden by a profile/environment specific section)
+#
+spring.main.banner-mode: "off"
+
+# adding sfly properties
+sfly:
+  server:
+    hostname: localhost #this will get overridden by `configdata\templates\deployconfig\<artifactId>.erb` in the build
+
+# These patterns are for Listing of unauthenticated url patterns in addition to Springboard defaults refer
+# https://github.com/sflyinc-shutterfly/springboard/blob/master/configuration/src/main/resources/services-core/defaults.yaml
+# For detailed information please refer https://github.com/sflyinc-shutterfly/usersvc-aws-utils/blob/master/auth-spring-boot-starter/README.md#url-path-authentication-configuration
+  #spring.security.urls:
+   # unauthenticated:
+   #   - antPatterns:
+    #      - /users/**
+   # authenticated:
+   #   - antPatterns:
+   #       - /secured/**
+
+# For "/_internal/info" diagnostic endpoint. These values are replaced at build time by maven's
+# maven-resources-plugin. Then, spring-boot will pick up any "info.*" properties for the
+# /_internal/info endpoint.
+info:
+  build:
+    groupId: "@project.groupId@"
+    artifactId: "@project.artifactId@"
+    description: "@project.description@"
+    version: "@project.version@"
+    name: "test-service-example Service"
+
+service:
+  cache:
+    caches:
+      - name: example_users
+        maxBytes: 16m
+        ttl: 1h
+  tags:
+    App: test-service-example
+    AppVersion: "@project.version@"
+    BusinessUnit: Consumer
+    ManagedBy: MyTestTeam
+
+# How to exclude specific metrics using regEx expressions
+#signalfx:
+#  metricsToExclude:
+#    - jvm.*
+
+
+
+

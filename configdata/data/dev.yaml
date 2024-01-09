@@ -1,0 +1,4 @@
+activeProfile: dev
+
+signalfxMetricsEnabled: false
+signalfxToken: replaceMe #secret://Shared/ThycoticServiceAccounts/MyTestTeam/test-service-example/sfx-token-dev/Signal FX Token/Secret

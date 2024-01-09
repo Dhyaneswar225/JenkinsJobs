@@ -1,0 +1,12 @@
+activeProfile: prod
+
+signalfxMetricsEnabled: true
+signalfxToken: replaceMe #secret://Shared/ThycoticServiceAccounts/MyTestTeam/test-service-example/sfx-token-prod/Signal FX Token/Secret
+
+inactiveRetentionDays: 180
+
+# TODO You will need to add this to the envs yaml file that you want APM enabled and it set to true.
+signalfxApmEnabled: true
+
+# TODO You will need to add this to the envs you want it enable with their mode monitor,protected.
+prevotyMode: protect

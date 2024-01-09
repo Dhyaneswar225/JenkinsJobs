@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.shutterfly.services</groupId>
+    <artifactId>test-service-example-config</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>test-service-example-config</name>
+
+    <!-- specify this parent to get access to build configuration using sflyconfig -->
+    <parent>
+        <groupId>com.shutterfly.springboard</groupId>
+        <artifactId>springboard-configdata-parent</artifactId>
+        <version>7.4.4</version>
+        <relativePath />
+    </parent>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Contains the version for sflyconfig. -->
+            <dependency>
+                <groupId>com.shutterfly.application</groupId>
+                <artifactId>sfly-versions-bom</artifactId>
+                <version>1.141.0-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.shutterfly.application.cm</groupId>
+            <artifactId>sflyconfig</artifactId>
+            <classifier>dev</classifier>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- plugin executions are configured in parent -->
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://artifact.internal.shutterfly.com/artifactory/sfly-repos</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>snapshots</id>
+            <url>https://artifact.internal.shutterfly.com/artifactory/sfly-repos</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+</project>

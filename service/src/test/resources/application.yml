@@ -1,0 +1,36 @@
+management:
+  metrics:
+    export:
+      signalfx:
+        enabled: false
+
+# Below properties are used by functional tests
+
+client.id: djOlaaty605xAgYG2jOc9MwuwWtJ8NgG
+client.secret: DunOCJ2Pe0ZwV7lv
+
+---
+
+properties.environment: dev
+
+base.url: https://api2.dev.shutterfly.com/v1/springboard-example/users
+oauth.url: https://user.dev.shutterfly.com/users/login
+
+---
+
+properties.environment: beta
+
+base.url: https://api2.beta.shutterfly.com/v1/springboard-example/users
+oauth.url: https://user.beta.shutterfly.com/users/login
+
+---
+
+properties.environment: stage
+
+base.url: https://api2.stage.shutterfly.com/v1/springboard-example/users
+oauth.url: https://user.stage.shutterfly.com/users/login
+
+---
+
+properties.environment: prod
+

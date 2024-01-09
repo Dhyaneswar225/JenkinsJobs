@@ -1,0 +1,20 @@
+test-service-example:
+  ports:
+    - "8080:8080"
+  image: artifact.stage.shutterfly.com/shutterfly/test-service-example:$application_tag
+  volumes_from:
+    - test-service-example-config:ro
+  cpu_shares: 512
+  mem_limit: 2g
+test-service-example-config:
+  mem_limit: 12m
+platform-logging-sidecar:
+  image: artifact.stage.shutterfly.com/shutterfly/platform-logging-sidecar:20230227-1652-5cc4c97
+  environment:
+    SERVICE: test-service-example
+  volumes_from:
+    - test-service-example
+  volumes:
+    - /etc/environment:/etc/environment:ro
+  cpu_shares: 64
+  mem_limit: 64m

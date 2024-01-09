@@ -1,0 +1,9 @@
+# Hiera.yaml file allows to specify a hierarchy for the order to apply the yaml files. A .yaml extension is automatically added to the name of the files.
+# The hierarchy decreases from top to bottom, local.yaml having the highest precedence and <environ>.yaml at the central configuration file location having the lowest.
+# The values common to most environments is specified in the lowest hierarchy file which we can overrride in higher hierarchy files with more environment specific values.
+# Please refer to https://wiki.corp.shutterfly.com/display/sfly/Configuration+with+ERB+Templates for more information.
+- '%{service_loc}/local'
+- '%{service_loc}/%{environ}'
+- '%{service_loc}/default'
+- '%{common_loc}/common/%{environ}'
+- '%{common_loc}/common/default'

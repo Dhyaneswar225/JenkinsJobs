@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.shutterfly.services</groupId>
+        <artifactId>test-service-example-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>test-service-example</artifactId>
+    <name>test-service-example</name>
+    <description>test-service-example Springboard service</description>
+    <properties>
+        <test-framework.version>1.2.1</test-framework.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.shutterfly.services</groupId>
+            <artifactId>test-service-example-models</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Use the minimal starter to avoid bringing in unnecessary dependencies (i.e. redis, jdbc). -->
+        <dependency>
+            <groupId>com.shutterfly.springboard</groupId>
+            <artifactId>springboard-starter-service-minimal</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.shutterfly.springboard</groupId>
+            <artifactId>springboard-starter-aws-ecs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.shutterfly.springboard</groupId>
+            <artifactId>springboard-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.shutterfly.springboard</groupId>
+            <artifactId>springboard-starter-hystrix</artifactId>
+        </dependency>
+
+        <!-- Test dependencies -->
+
+        <dependency>
+            <groupId>com.shutterfly.springboard</groupId>
+            <artifactId>springboard-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.shutterfly.test</groupId>
+            <artifactId>test-endpoint</artifactId>
+            <version>${test-framework.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.shutterfly.test</groupId>
+            <artifactId>test-auth</artifactId>
+            <version>${test-framework.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!-- Plugin used to include git commit information on the /_internal/info endpoint -->
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- profile to run the full integration tests against a local server -->
+        <profile>
+            <id>localIT</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>reserve-springboot-port</id>
+                                <goals>
+                                    <goal>reserve-network-port</goal>
+                                </goals>
+                                <phase>pre-integration-test</phase>
+                                <configuration>
+                                    <portNames>
+                                        <portName>server.port</portName>
+                                    </portNames>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>service-start</id>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                                <phase>pre-integration-test</phase>
+                            </execution>
+                            <execution>
+                                <id>service-stop</id>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                                <phase>post-integration-test</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <jvmArguments>-Dsignalfx.enabled=false</jvmArguments>
+                            <folders>
+                                <folder>.</folder>
+                            </folders>
+                            <arguments>
+                                <argument>--server.port=${server.port}</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <additionalClasspathElements>
+                                <additionalClasspathElement>${basedir}/target/classes</additionalClasspathElement>
+                            </additionalClasspathElements>
+                            <systemPropertyVariables>
+                                <env>local</env>
+                                <server.port>${server.port}</server.port>
+                            </systemPropertyVariables>
+                            <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                        </configuration>
+                        <executions>
+                            <!-- Enabled below execution for a profile to run the full integration tests against a local server -->
+                            <!-- <execution>
+                                <id>integration-test</id>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>verify</id>
+                                <goals>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution> -->
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

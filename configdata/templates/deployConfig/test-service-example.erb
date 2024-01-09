@@ -1,0 +1,50 @@
+HEAP_MIN_MB=<%= minMemoryMB %>
+HEAP_MAX_MB=<%= maxMemoryMB %>
+
+# Use the G1 collector
+GC_SELECTOR="-XX:+UseG1GC"
+GC_SELECTOR+=" -XX:MaxGCPauseMillis=200"
+GC_SELECTOR+=" -XX:InitiatingHeapOccupancyPercent=45"
+GC_SELECTOR+=" -XX:+UseStringDeduplication"
+GC_SELECTOR+=" -verbose:gc"
+GC_SELECTOR+=" -XX:+PrintGCDetails"
+GC_SELECTOR+=" -Xloggc:/var/log/sfsite/gc.log.$(date +%Y-%m-%d)"
+GC_SELECTOR+=" -XX:+PrintClassHistogram"
+GC_SELECTOR+=" -XX:+JavaMonitorsInStackTrace"
+GC_SELECTOR+=" -XX:+PrintVMOptions"
+GC_SELECTOR+=" -Xlog:age*=trace"
+GC_SELECTOR+=" -Xlog:ergo*=trace"
+GC_SELECTOR+=" -Xlog:stringdedup*=debug"
+GC_SELECTOR+=" -XX:+DisableExplicitGC"
+GC_SELECTOR+=" -XX:+HeapDumpOnOutOfMemoryError"
+GC_SELECTOR+=" -XX:HeapDumpPath=/var/lib/ecs/crash/" # this directory will upload to S3 crash dump location
+GC_SELECTOR+=" -XX:ErrorFile=/var/lib/ecs/crash/java_hs_err_pid%p_${SERVICE}-${SFLY_ENV}_${HOSTNAME}.log"
+
+JAVA_OPTS=" -Dsfly.server.hostname=${HOSTNAME}"
+JAVA_OPTS+=" -Dcom.shutterfly.logsubdir=/var/log/sfsite"
+JAVA_OPTS+=" -D${SERVICE}.instanceId=${SERVICE}-${PORT}"
+JAVA_OPTS+=" -Dhikaricp.configurationFile=/dist/config/hikari.properties"
+JAVA_OPTS+=" -jar ${SFLY_HOME}/${SERVICE}server.jar"
+JAVA_OPTS+=" --server.port=${PORT}"
+JAVA_OPTS+=" --sfly.log.console.app.format=json"
+JAVA_OPTS+=" --sfly.log.console.access.format=json"
+JAVA_OPTS+=" --sfly.log.file.app.format=json"
+JAVA_OPTS+=" --sfly.log.file.access.format=json"
+# In ECS, Logs need to go to stdout (console) rather than container filesystem
+JAVA_OPTS+=" --sfly.log.console.app.enabled=true"
+JAVA_OPTS+=" --sfly.log.console.access.enabled=true"
+JAVA_OPTS+=" --sfly.log.file.app.enabled=false"
+JAVA_OPTS+=" --sfly.log.file.access.enabled=false"
+
+MEMORY_OPTS=" -server"
+MEMORY_OPTS+=" $GC_SELECTOR"
+MEMORY_OPTS+=" -Djava.awt.headless=true"
+MEMORY_OPTS+=" -Xms${HEAP_MIN_MB}m"
+MEMORY_OPTS+=" -Xmx${HEAP_MAX_MB}m"
+MEMORY_OPTS+=" -Djava.net.preferIPv4Stack=true"
+
+# SignalFX APM integration
+USE_SIGNALFX_APM=<%= signalfxApmEnabled %>
+
+# Prevoty Integration
+PREVOTY_MODE=<%= prevotyMode %>

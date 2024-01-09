@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.shutterfly.services</groupId>
+        <artifactId>test-service-example-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>test-service-example-ci</artifactId>
+    <packaging>pom</packaging>
+    <description>Minimal pom used to enable integrated documentation with CI DSL files</description>
+    <dependencyManagement>
+        <dependencies>
+            <!-- Contains the version for jenkins-dsl-policies. -->
+            <dependency>
+                <groupId>com.shutterfly.application</groupId>
+                <artifactId>sfly-versions-bom</artifactId>
+                <version>1.141.0-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.shutterfly.devops</groupId>
+            <artifactId>jenkins-dsl-policies</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>job-dsl-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

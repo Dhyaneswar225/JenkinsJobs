@@ -1,0 +1,6 @@
+activeProfile: beta
+
+signalfxMetricsEnabled: true
+signalfxToken: replaceMe #secret://Shared/ThycoticServiceAccounts/MyTestTeam/test-service-example/sfx-token-beta/Signal FX Token/Secret
+
+inactiveRetentionDays: 90
