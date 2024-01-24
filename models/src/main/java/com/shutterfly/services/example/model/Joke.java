@@ -1,11 +1,7 @@
 package com.shutterfly.services.example.model;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-@Getter
-@Setter
 @Document(collection = "jokes")
 public class Joke {
     @Id
