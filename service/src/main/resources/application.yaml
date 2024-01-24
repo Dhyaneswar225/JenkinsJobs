@@ -1,7 +1,16 @@
 #
 # Global/Default configuration (possibly overridden by a profile/environment specific section)
 #
-spring.main.banner-mode: "off"
+spring:
+  main:
+    banner-mode: "off"
+  thymeleaf:
+    suffix: .html
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: jokes-mongodb
 
 # adding sfly properties
 sfly:

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Joke</title>
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+<h2>Add Joke</h2>
+
+<!-- Form to submit a POST request to add a new joke -->
+<form id="addJokeForm">
+    <label>Type:</label>
+    <input type="text" id="type" required><br>
+
+    <label>Setup:</label>
+    <input type="text" id="setup" required><br>
+
+    <label>Punchline:</label>
+    <input type="text" id="punchline" required><br>
+
+    <button type="button" onclick="addJoke()">Add Joke</button>
+</form>
+
+<!-- JavaScript function to handle form submission asynchronously -->
+<script>
+    function addJoke() {
+        // Get form data
+        var type = $("#type").val();
+        var setup = $("#setup").val();
+        var punchline = $("#punchline").val();
+
+        // Create JSON object with form data
+        var jokeData = {
+            "type": type,
+            "setup": setup,
+            "punchline": punchline
+        };
+
+        // Submit form data asynchronously using AJAX
+        $.ajax({
+            type: "POST",
+            url: "/jokes",
+            contentType: "application/json",
+            data: JSON.stringify(jokeData),
+            success: function(response) {
+                // Handle success, e.g., redirect to a new page
+                window.location.href = "/all-jokes";
+            },
+            error: function(error) {
+                // Handle error
+                console.error("Error submitting form:", error);
+            }
+        });
+    }
+</script>
+</body>
+</html>

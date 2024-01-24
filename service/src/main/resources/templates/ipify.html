@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display IP Address</title>
+</head>
+<body>
+
+<h1>IP Address:</h1>
+<!-- Thymeleaf expression to display the IP address -->
+<p id="ipAddress" th:text="${ipAddressModel.ipAddress}" style="display: none;"></p>
+<button id="showIpAddressButton" onclick="showIpAddress()">Show IP Address</button>
+<button id="hideIpAddressButton" onclick="hideIpAddress()">Hide IP Address</button>
+<script>
+    function showIpAddress() {
+        // Show the IP address element
+        document.getElementById('ipAddress').style.display = 'block';
+    }
+    function hideIpAddress(){
+    document.getElementById('ipAddress').style.display = 'none';
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>All Jokes Display</title>
+</head>
+
+<body>
+
+<h2>All Jokes</h2>
+
+<!-- Iterate over all jokes and display setup and punchline -->
+<div th:each="joke : ${jokes}">
+    <p><strong>Joke:</strong> <span th:text="${joke.setup}"></span></p>
+    <p><strong>Punchline:</strong> <span th:text="${joke.punchline}"></span></p>
+    <hr/>
+</div>
+
+</body>
+
+</html>

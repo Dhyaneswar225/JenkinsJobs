@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Joke</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+
+<h2>Update Joke</h2>
+
+<form id="updateJokeForm">
+    <label>Setup:</label>
+    <input type="text" th:value="${joke.setup}" name="setup" id="setup" required><br>
+
+    <label>Punchline:</label>
+    <input type="text" th:value="${joke.punchline}" name="punchline" id="punchline" required><br>
+
+    <button type="button" onclick="submitForm()" th:data-jokeid="${joke.id}">Update Joke</button>
+</form>
+<p th:text="${joke.id}"></p>
+<script>
+    function submitForm() {
+        var setup = $("#setup").val();
+        var punchline = $("#punchline").val();
+        var jokeId=$("#updateJokeForm button").data("jokeid");
+        console.log('Setup in html',setup);
+        console.log('punchline in html',punchline);
+        console.log('Joke ID:',jokeId);
+        // Create JSON object with form data
+        var jokeData = {
+            "setup": setup,
+            "punchline": punchline
+        };
+         // Submit form data asynchronously using AJAX
+        $.ajax({
+            type: "POST",
+            url: "/update-joke/" + jokeId,
+            contentType: "application/json",
+            data: JSON.stringify(jokeData),
+            success: function(response) {
+                // Handle success, e.g., redirect to a new page
+                window.location.href = "/";
+            },
+            error: function(error) {
+                // Handle error
+                console.error("Error updating joke:", error);
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Joke Display</title>
+</head>
+
+<body>
+
+<h2>Random Joke</h2>
+
+<!-- First Button to Display Setup -->
+<button onclick="displaySetup()">Show Joke</button>
+<p th:text="${joke.setup}" style="display: none;" id="setup"></p>
+
+<!-- Second Button to Display Punchline -->
+<button onclick="displayPunchline()">Show Punchline</button>
+<p th:text="${joke.punchline}" style="display: none;" id="punchline"></p>
+
+<script th:inline="javascript">
+    function displaySetup() {
+        var setupElement = document.getElementById('setup');
+        var punchlineElement = document.getElementById('punchline');
+        setupElement.style.display = 'block';
+        punchlineElement.style.display = 'none';
+    }
+
+    function displayPunchline() {
+        var setupElement = document.getElementById('setup');
+        var punchlineElement = document.getElementById('punchline');
+        setupElement.style.display = 'none';
+        punchlineElement.style.display = 'block';
+    }
+</script>
+</body>
+
+</html>

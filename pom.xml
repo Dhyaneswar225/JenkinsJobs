@@ -22,7 +22,6 @@
         <module>models</module>
         <module>service</module>
         <module>performance-tests</module>
-
     </modules>
     <build>
         <plugins>

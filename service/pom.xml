@@ -18,12 +18,11 @@
             <artifactId>test-service-example-models</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
-
-        <!-- Use the minimal starter to avoid bringing in unnecessary dependencies (i.e. redis, jdbc). -->
         <dependency>
             <groupId>com.shutterfly.springboard</groupId>
             <artifactId>springboard-starter-service-minimal</artifactId>
         </dependency>
+        <!-- Use the minimal starter to avoid bringing in unnecessary dependencies (i.e. redis, jdbc). -->
         <dependency>
             <groupId>com.shutterfly.springboard</groupId>
             <artifactId>springboard-starter-aws-ecs</artifactId>
@@ -61,7 +60,18 @@
             <artifactId>json-path</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

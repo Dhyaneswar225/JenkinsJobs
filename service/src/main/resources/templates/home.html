@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+</head>
+<body>
+
+<label for="jokeId">Enter Joke ID:</label>
+<input type="text" id="jokeId" name="id" required>
+<button onclick="updateJoke()">Update Joke</button>
+
+<a href="/addJoke">Add Joke</a>
+
+<script>
+  function updateJoke() {
+      var jokeId = document.getElementById('jokeId').value;
+      if (jokeId.trim() !== '') {
+          window.location.href = '/update-joke/' + jokeId;
+      } else {
+          alert('Please enter a Joke ID.');
+      }
+  }
+</script>
+
+</body>
+</html>

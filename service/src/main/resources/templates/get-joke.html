@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Joke</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+
+<h2>Get Joke By ID:</h2>
+
+<p>ID: <span th:text="${joke1.id}"></span></p>
+<p>Type:<span th:text="${joke1.type}"></span></p>
+<p>Setup:<span th:text="${joke1.setup}"></span></p>
+<p>Punchline:<span th:text="${joke1.punchline}"></span></p>
+</body>
+</html>
