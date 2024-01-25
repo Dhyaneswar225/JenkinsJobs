@@ -79,6 +79,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+
             </plugin>
             <!-- Plugin used to include git commit information on the /_internal/info endpoint -->
             <plugin>
@@ -170,6 +171,7 @@
                             </execution> -->
                         </executions>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>
