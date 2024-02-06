@@ -1,0 +1,109 @@
+#!/usr/bin/ruby
+
+require 'rubygems'
+require 'template-translator'
+require 'optparse'
+require 'fileutils'
+
+hiera_vars = Hash.new("")
+
+options = {:clean => nil, :common_loc => '', :drop_secrets => false, :dump => nil, :secret_val => nil, :local => true, :overlay => '', :verbose => nil}
+
+ARGV.push('-h') if ARGV.empty?
+
+parser = OptionParser.new do |opts|
+  opts.banner = "usage: configTemplate [options] environment local_service_path map_loc (*map_loc can be a mapping YAML file or a directory to recurse through)"
+  opts.on('-c', '--shared DIRECTORY', 'Shared configuration data directory') do |common_loc|
+    options[:common_loc] = common_loc
+  end
+  opts.on('-d', '--deleteSecret', 'Remove \'secret\' directory from data directory when done',
+      'Removed from --shared location if present otherwise from local_service_path') do
+    options[:clean] = true
+  end
+  opts.on('--dump FILE', "Don't generate configuration, just dump generated binding to FILE.",
+    "Use - as FILE for stdout.") do |dumpfile|
+    options[:dump] = dumpfile
+  end
+  opts.on('--noLocal', 'Don\'t include data/local in the data hierarchy, usually for CI builds') do
+    options[:local] = false
+  end
+  opts.on('--noSecret [value]', "Don't lookup secrets from Thycotic",
+    "if value is specified all secrets are set to value instead (usually '')",
+    'otherwise lines containing Thycotic secrets are deleted completely from generated files') do |val|
+    options[:drop_secrets] = true
+    options[:secret_val] = val || nil
+  end
+  opts.on('-o', '--overlay VALUE', 'Value to substitute for %{overlay} in hiera.yaml') do |overlay|
+    options[:overlay] = overlay
+  end
+  opts.on('-v', '--verbose', 'Sets verbose mode') do
+    options[:verbose] = true
+  end
+  opts.on('--var name=value', "Set arbitrary variables for use in hiera.yaml file",
+    "may be specified more than once") do |opt|
+    list = opt.split('=')
+    unless list.length == 2
+      raise "incorect number of arguments to --var option"
+    end
+    hiera_vars[list[0].intern] = list[1]
+  end
+  opts.on( '-h', '--help', 'Display this screen' ) do
+    puts opts
+    exit
+  end
+end
+
+begin parser.parse!
+rescue OptionParser::InvalidOption => e
+  puts e
+  puts parser
+  exit 1
+end
+
+environment = ARGV[0]
+service_loc = ARGV[1]
+map_loc = ARGV[2]
+
+# work around aws overlay for older builds
+if environment.end_with? "1"
+  environment = environment.chomp('1')
+  options[:overlay] = '1'
+end
+
+# add in other hiera.yaml command line variables
+hiera_vars.merge!({
+    :environ => environment,
+    :common_loc => options[:common_loc],
+    :service_loc => service_loc,
+    :overlay => options[:overlay]
+  })
+
+# always set --noLocal if under Jenkins
+if ENV['JENKINS_HOME']
+  options[:local] = false
+end
+
+if options[:verbose]
+  STDERR.puts 'Using common_loc = ' + hiera_vars[:common_loc]
+  STDERR.puts 'Using environment = ' + hiera_vars[:environ]
+  STDERR.puts "Using local = #{options[:local]}"
+  STDERR.puts 'Using service_loc = ' + hiera_vars[:service_loc]
+  STDERR.puts 'Using map_loc = ' + map_loc
+end
+
+# Convert all files described in the mapping document
+# Or recurse through the directory provided
+ct = ConfigTemplate.new(hiera_vars, options[:local], options[:verbose], options[:drop_secrets], options[:secret_val], options[:dump])
+if File.directory?(map_loc)
+   ct.convert_directory(map_loc)
+else
+   ct.convert_list(map_loc)
+end
+
+if options[:clean]
+  clean_loc = (options[:common_loc].empty? ? service_loc : options[:common_loc]) + '/secret'
+  STDERR.puts 'removing ' + clean_loc if options[:verbose]
+  FileUtils.rm_rf(clean_loc)
+end
+
+STDERR.puts 'Template conversion complete' if options[:verbose]

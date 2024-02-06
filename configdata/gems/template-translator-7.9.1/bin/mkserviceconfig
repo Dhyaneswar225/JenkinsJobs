@@ -1,0 +1,28 @@
+#!/usr/bin/ruby
+
+overlay = ''
+nolocal = ''
+
+if ENV.has_key? 'JENKINS_HOME'
+  nolocal = "--noLocal"
+end
+
+shared = ARGV[0]
+ARGV.shift
+
+case ARGV[0]
+when "dev", "int", "beta", "kappa", "stage", "prod"
+  env = ARGV[0]
+# handle temporary cloud environments such as beta1
+# set cloud overlay and set env back to base env (w/o 1)
+
+when /1$/
+  overlay = "-o 1"
+  env = ARGV[0].chomp('1')
+else
+  puts "usage: mkserviceconfig sharedloc env"
+  exit
+end
+
+system("configTemplate -v #{nolocal} #{overlay} -c \"#{shared}\" #{env} data mapping.yaml")
+exit($?.exitstatus)
